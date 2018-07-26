@@ -78,7 +78,8 @@ org.springframework.boot.autoconfigure.jsonb.JsonbAutoConfiguration
 
 # AutoConfigureWebClient auto-configuration imports
 org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient=\
-org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration
+org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration,\
+org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientSecurityAutoConfiguration
 
 # AutoConfigureWebFlux auto-configuration imports
 org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebFlux=\

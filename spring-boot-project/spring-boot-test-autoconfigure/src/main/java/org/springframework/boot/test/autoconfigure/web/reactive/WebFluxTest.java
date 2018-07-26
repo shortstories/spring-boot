@@ -134,4 +134,6 @@ public @interface WebFluxTest {
 	@AliasFor(annotation = ImportAutoConfiguration.class, attribute = "exclude")
 	Class<?>[] excludeAutoConfiguration() default {};
 
+	@AliasFor(annotation = AutoConfigureWebTestClient.class)
+	boolean secure() default true;
 }

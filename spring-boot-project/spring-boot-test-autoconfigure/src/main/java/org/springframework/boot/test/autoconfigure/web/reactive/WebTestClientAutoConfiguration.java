@@ -33,6 +33,7 @@ import org.springframework.boot.web.codec.CodecCustomizer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.test.web.reactive.server.MockServerConfigurer;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.WebHandler;
@@ -53,13 +54,16 @@ public class WebTestClientAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	@ConditionalOnBean(WebHandler.class)
-	public WebTestClient webTestClient(ApplicationContext applicationContext,
-			List<WebTestClientBuilderCustomizer> customizers) {
-		WebTestClient.Builder builder = WebTestClient
-				.bindToApplicationContext(applicationContext).configureClient();
-		for (WebTestClientBuilderCustomizer customizer : customizers) {
-			customizer.customize(builder);
-		}
+	public WebTestClient webTestClient(final ApplicationContext applicationContext,
+			final List<MockServerConfigurer> serverConfigurers,
+			final List<WebTestClientBuilderCustomizer> customizers) {
+
+		final WebTestClient.MockServerSpec<?> spec = WebTestClient
+				.bindToApplicationContext(applicationContext);
+		serverConfigurers.forEach(spec::apply);
+		final WebTestClient.Builder builder = spec.configureClient();
+		customizers.forEach((customizer) -> customizer.customize(builder));
+
 		return builder.build();
 	}
 

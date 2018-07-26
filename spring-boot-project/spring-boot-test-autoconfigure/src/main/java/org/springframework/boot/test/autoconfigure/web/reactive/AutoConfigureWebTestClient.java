@@ -51,4 +51,7 @@ public @interface AutoConfigureWebTestClient {
 	 */
 	String timeout() default "";
 
+
+	boolean secure() default true;
+
 }
