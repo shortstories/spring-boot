@@ -25,6 +25,7 @@ import org.springframework.boot.context.properties.PropertyMapper;
 import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.core.convert.ConversionException;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
+import org.springframework.security.config.oauth2.client.oidc.OidcConfigurationProvider;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistration.Builder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -37,6 +38,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Phillip Webb
  * @author Thiago Hirata
+ * @author Madhura Bhave
  * @since 2.1.0
  */
 public final class OAuth2ClientPropertiesRegistrationAdapter {
@@ -54,7 +56,11 @@ public final class OAuth2ClientPropertiesRegistrationAdapter {
 
 	private static ClientRegistration getClientRegistration(String registrationId,
 			Registration properties, Map<String, Provider> providers) {
-		Builder builder = getBuilder(registrationId, properties.getProvider(), providers);
+		Builder builder = getBuilderFromIssuerIfPossible(registrationId,
+				properties.getProvider(), providers);
+		if (builder == null) {
+			builder = getBuilder(registrationId, properties.getProvider(), providers);
+		}
 		PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
 		map.from(properties::getClientId).to(builder::clientId);
 		map.from(properties::getClientSecret).to(builder::clientSecret);
@@ -68,6 +74,30 @@ public final class OAuth2ClientPropertiesRegistrationAdapter {
 				.to(builder::scope);
 		map.from(properties::getClientName).to(builder::clientName);
 		return builder.build();
+	}
+
+	private static Builder getBuilderFromIssuerIfPossible(String registrationId,
+			String configuredProviderId, Map<String, Provider> providers) {
+		String providerId = (configuredProviderId != null ? configuredProviderId
+				: registrationId);
+		if (providers.containsKey(providerId)) {
+			Provider provider = providers.get(providerId);
+			String issuer = provider.getIssuerUri();
+			if (issuer != null) {
+				String cleanedIssuer = cleanIssuerPath(issuer);
+				Builder builder = OidcConfigurationProvider.issuer(cleanedIssuer)
+						.registrationId(registrationId);
+				return getBuilder(builder, provider);
+			}
+		}
+		return null;
+	}
+
+	private static String cleanIssuerPath(String issuer) {
+		if (issuer.endsWith("/")) {
+			return issuer.substring(0, issuer.length() - 1);
+		}
+		return issuer;
 	}
 
 	private static Builder getBuilder(String registrationId, String configuredProviderId,

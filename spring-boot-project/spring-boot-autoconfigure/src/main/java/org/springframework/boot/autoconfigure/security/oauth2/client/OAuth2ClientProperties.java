@@ -89,28 +89,28 @@ public class OAuth2ClientProperties {
 		private String clientSecret;
 
 		/**
-		 * Client authentication method. May be left blank then using a pre-defined
+		 * Client authentication method. May be left blank when using a pre-defined
 		 * provider.
 		 */
 		private String clientAuthenticationMethod;
 
 		/**
-		 * Authorization grant type. May be left blank then using a pre-defined provider.
+		 * Authorization grant type. May be left blank when using a pre-defined provider.
 		 */
 		private String authorizationGrantType;
 
 		/**
-		 * Redirect URI. May be left blank then using a pre-defined provider.
+		 * Redirect URI. May be left blank when using a pre-defined provider.
 		 */
 		private String redirectUriTemplate;
 
 		/**
-		 * Authorization scopes. May be left blank then using a pre-defined provider.
+		 * Authorization scopes. May be left blank when using a pre-defined provider.
 		 */
 		private Set<String> scope;
 
 		/**
-		 * Client name. May be left blank then using a pre-defined provider.
+		 * Client name. May be left blank when using a pre-defined provider.
 		 */
 		private String clientName;
 
@@ -208,6 +208,11 @@ public class OAuth2ClientProperties {
 		 */
 		private String jwkSetUri;
 
+		/**
+		 * URI that an OpenID Connect Provider asserts as its Issuer Identifier.
+		 */
+		private String issuerUri;
+
 		public String getAuthorizationUri() {
 			return this.authorizationUri;
 		}
@@ -246,6 +251,14 @@ public class OAuth2ClientProperties {
 
 		public void setJwkSetUri(String jwkSetUri) {
 			this.jwkSetUri = jwkSetUri;
+		}
+
+		public String getIssuerUri() {
+			return this.issuerUri;
+		}
+
+		public void setIssuerUri(String issuerUri) {
+			this.issuerUri = issuerUri;
 		}
 
 	}

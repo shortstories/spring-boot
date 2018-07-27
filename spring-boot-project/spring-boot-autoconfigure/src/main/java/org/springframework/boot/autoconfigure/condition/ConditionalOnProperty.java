@@ -72,6 +72,20 @@ import org.springframework.core.env.Environment;
  * {@link #matchIfMissing()} attribute is consulted. By default missing attributes do not
  * match.
  *
+ * <p>
+ * This condition cannot be reliably used for matching collection properties. For example,
+ * in the following configuration, the condition matches if {@code spring.example.values}
+ * is present in the {@link Environment} but does not match if
+ * {@code spring.example.values[0]} is present.
+ *
+ * <pre class="code">
+ * &#064;ConditionalOnProperty(prefix = "spring", name = "example.values")
+ * class ExampleAutoConfiguration {
+ * }
+ * </pre>
+ *
+ * It is better to use a custom condition for such cases.
+ *
  * @author Maciej Walkowiak
  * @author Stephane Nicoll
  * @author Phillip Webb
@@ -99,7 +113,7 @@ public @interface ConditionalOnProperty {
 	/**
 	 * The name of the properties to test. If a prefix has been defined, it is applied to
 	 * compute the full key of each property. For instance if the prefix is
-	 * {@code app.config} and one value is {@code my-value}, the fully key would be
+	 * {@code app.config} and one value is {@code my-value}, the full key would be
 	 * {@code app.config.my-value}
 	 * <p>
 	 * Use the dashed notation to specify each property, that is all lower case with a "-"
@@ -110,7 +124,7 @@ public @interface ConditionalOnProperty {
 
 	/**
 	 * The string representation of the expected value for the properties. If not
-	 * specified, the property must <strong>not</strong> be equals to {@code false}.
+	 * specified, the property must <strong>not</strong> be equal to {@code false}.
 	 * @return the expected value
 	 */
 	String havingValue() default "";

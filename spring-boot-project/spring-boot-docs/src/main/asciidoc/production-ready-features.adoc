@@ -563,7 +563,7 @@ JMX or an HTTP request is converted to the required types using an instance of
 
 [[production-ready-endpoints-custom-web]]
 ==== Custom Web Endpoints
-Operations on an `@Endpoint`, `@WebEndpoint`, or `@WebEndpointExtension` are automatically
+Operations on an `@Endpoint`, `@WebEndpoint`, or `@EndpointWebExtension` are automatically
 exposed over HTTP using Jersey, Spring MVC, or Spring WebFlux.
 
 
@@ -920,6 +920,9 @@ appropriate:
 [cols="1,4"]
 |===
 |Name |Description
+
+|{sc-spring-boot-actuator}/cassandra/CassandraReactiveHealthIndicator.{sc-ext}[`CassandraReactiveHealthIndicator`]
+|Checks that a Cassandra database is up.
 
 |{sc-spring-boot-actuator}/mongo/MongoReactiveHealthIndicator.{sc-ext}[`MongoReactiveHealthIndicator`]
 |Checks that a Mongo database is up.
